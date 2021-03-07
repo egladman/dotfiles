@@ -9,7 +9,7 @@ if [[ "$OSTYPE" == "darwin"* ]]; then
     export BASH_SILENCE_DEPRECATION_WARNING=1
 fi
 
-case "OSTYPE" in
+case "$OSTYPE" in
     solaris*)
         OSTYPE_NAME=solaris
         ;;
