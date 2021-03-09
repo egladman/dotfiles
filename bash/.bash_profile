@@ -25,6 +25,11 @@ case "$OSTYPE" in
 esac
 export OSTYPE_NAME
 
+# asdf
+# It's super important this is present in .bash_profile and not .bashrc
+source "${HOME}/.asdf/asdf.sh"
+source "${HOME}/.asdf/completions/asdf.bash"
+
 if [ -f "${HOME}/.bashrc" ]; then
     source "${HOME}/.bashrc"
 fi

@@ -1,3 +1,9 @@
 [submodule "emacs/.emacs.d"]
 	path = emacs/.emacs.d
 	url = https://github.com/syl20bnr/spacemacs
+[submodule "kitty/.config/kitty/kitty-themes"]
+	path = kitty/.config/kitty/kitty-themes
+	url = git@github.com:dexpota/kitty-themes.git
+[submodule "dotfiles-immuta"]
+	path = dotfiles-immuta
+	url = git@github.com:egladman/dotfiles-immuta.git
