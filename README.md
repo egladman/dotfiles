@@ -25,7 +25,7 @@ cd ~/.dotfiles
 4. Initalize dotfiles
 
 ```sh
-./setup.sh
+./stow.sh
 ```
 
 *Note:* The following script runs `stow` on all top-level directories in `~/.dotfiles`
@@ -36,5 +36,5 @@ cd ~/.dotfiles
 If at any point you would like to remove the symlinks created by `stow` run the command:
 
 ```sh
-./setup.sh --delete
+./stow.sh --delete
 ```
