@@ -181,7 +181,7 @@ immuta-aws-ecr-login() {
     # Usage: immuta-aws-ecr-login
     #        immuta-aws-ecr-login <profile>
 
-    source "${HOME}/.config/bash/immuta.env" || {
+    source "${HOME}/.config/immuta/bash/immuta.env" || {
         printf '%s\n' "${FUNCNAME[0]}: Unable to source '${HOME}/.config/bash/immuta.env'"
         return 1
     }
@@ -391,5 +391,12 @@ immuta-minikube-push-image() {
 
     docker tag "$image" "${IMMUTA_MINIKUBE_CONTAINER_REGISTRY_URL}/${target}" && \
     docker push "${IMMUTA_MINIKUBE_CONTAINER_REGISTRY_URL}/${target}"
+}
+
+immuta-minikube-push-images-all() {
+    mapfile -t images < <(docker image ls --format "{{.ID}} {{ .Repository }} {{.Tag}}")
+    for image in "${images[@]}"; do
+        
+    done
 }
 
