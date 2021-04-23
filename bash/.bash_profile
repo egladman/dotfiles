@@ -20,3 +20,9 @@ fi
 
 export EDITOR="emacs -nw"
 export VISUAL="$EDITOR"
+export MARKPATH="${HOME}/.marks"
+export CDPATH=".:${MARKPATH}"
+
+if [[ ! -d "$MARKPATH" ]]; then
+    mkdir -p "$MARKPATH"
+fi
