@@ -9,7 +9,7 @@ source "${HOME}/.config/bash/git-completion.bash"
 eval "$(starship init bash)"
 
 cd() {
-    case "$@" in
+    case "$*" in
         '...') # git repository root
             local path
             path="$(git rev-parse --show-toplevel)"
