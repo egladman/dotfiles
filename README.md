@@ -6,6 +6,9 @@ My personal dotfiles managed with [GNU Stow](https://www.gnu.org/software/stow/)
 
 1. Install GNU Stow
 
+```
+dnf install stow
+```
 
 2. Clone repo
 
