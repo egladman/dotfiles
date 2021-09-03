@@ -23,6 +23,15 @@ export VISUAL="$EDITOR"
 export MARKPATH="${HOME}/.marks"
 export CDPATH=".:${MARKPATH}"
 
+# Kitty automatically sets this to 'xterm-kitty', and it doesn't always play
+# nicely with SSH
+export TERM=xterm-256color
+
+# AWS
+export AWS_DEFAULT_REGION="us-east-1"
+
 if [[ ! -d "$MARKPATH" ]]; then
     mkdir -p "$MARKPATH"
 fi
+
+export PATH="$HOME/.poetry/bin:$PATH"
