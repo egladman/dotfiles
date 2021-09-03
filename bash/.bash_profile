@@ -18,6 +18,12 @@ if [ -f "${HOME}/.bashrc" ]; then
     source "${HOME}/.bashrc"
 fi
 
+# User specific environment
+if ! [[ "$PATH" =~ "$HOME/.local/bin:$HOME/bin:" ]]; then
+    PATH="$HOME/.local/bin:$HOME/bin:$PATH"
+fi
+export PATH
+
 export EDITOR="emacs -nw"
 export VISUAL="$EDITOR"
 export MARKPATH="${HOME}/.marks"
