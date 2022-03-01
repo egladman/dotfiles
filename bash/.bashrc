@@ -138,6 +138,17 @@ unmark() {
     rm -i "${MARKPATH:?}/${target}"
 }
 
+##########
+# Docker #
+##########
+
+docker-shell() {
+    # Usage: docker-shell <imagerepository>
+    #        docker-shell <imagerepository> <shell>
+
+    docker run --rm --tty --interactive "$1" "${2:-/bin/bash}"
+}
+
 #######
 # Nix #
 #######
@@ -399,4 +410,3 @@ immuta-minikube-push-images-all() {
         
     done
 }
-
