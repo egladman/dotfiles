@@ -147,10 +147,35 @@ unmark() {
 ##########
 
 docker-shell() {
-    # Usage: docker-shell <imagerepository>
-    #        docker-shell <imagerepository> <shell>
+    # Usage: docker-shell <imageRepository>
+    #        docker-shell image <imageRepository>
+    #        docker-shell image <imageRepository> <shell>
+    #        docker-shell container <containerName>
+    #        docker-shell container <containerName> <shell>
 
-    docker run --rm --tty --interactive "$1" "${2:-/bin/bash}"
+    # Start an interactive shell session in a new or running container. Defaults to bash
+
+    declare -a docker_opts
+
+    local context
+    case "$1" in
+        i|image)
+            context="run"
+            docker_opts+=("--rm")
+            ;;
+        c|container)
+            context="exec"
+            ;;
+    esac
+
+    # Default to 'run' if no context is given
+    if [[ -z "$context" ]]; then
+        context=run
+    else
+        shift
+    fi
+
+    docker "$context" "${docker_opts[@]}" --tty --interactive "$1" "${2:-bash}"
 }
 
 #######
@@ -177,31 +202,33 @@ nix-install() {
     nix-env -iA "${nix_argument[@]}"
 }
 
-#########################
-# Immuta (Nonsensitive) #
-#########################
+nix-uninstall() {
+    # Usage: nix-uninstall <package_name>
+    #        nix-uninstall vim
 
-immuta-aws-sso-login() {
-    # Usage: immuta-aws-sso-login
-    #        immuta-aws-sso-login <profile>
-
-    declare -a aws_opts
-    if [[ -n "$1" ]]; then
-        aws_opts=(--profile "$1")
-    fi
-    aws sso login "${aws_opts[@]}"
+    nix-env --uninstall "S@"
 }
 
-immuta-aws-ecr-login() {
-    # Usage: immuta-aws-ecr-login
-    #        immuta-aws-ecr-login <profile>
+nix-update() {
+    # Usage: nix-update
 
-    source "${HOME}/.config/immuta/bash/immuta.env" || {
-        printf '%s\n' "${FUNCNAME[0]}: Unable to source '${HOME}/.config/bash/immuta.env'"
-        return 1
-    }
+    # Update the list of packages
 
-    immuta-aws-sso-login "$1" && {
-        aws ecr get-login-password | docker login --username AWS --password-stdin "${IMMUTA_AWS_ECR_URL:?}"
-    }
+    nix-channel --update
+}
+
+nix-upgrade() {
+    # Usage: nix-upgrade
+
+    # Upgrade packages
+
+    nix-env -u
+}
+
+nix-search() {
+    # Usage: nix-search
+
+    # Find package by substring
+
+    nix-env -qaP '.*'"${1}"'.*'
 }
