@@ -25,7 +25,8 @@ cd() {
 }
 
 em() {
-    emacs -nw "$@"
+    # Launch text editor. Fallback to vi if emacs is unavailable
+    emacs -nw "$@" || vi "$@"
 }
 
 la() {
