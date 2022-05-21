@@ -45,6 +45,16 @@ h() {
     helm "$@"
 }
 
+ss() {
+    if [[ ! -d "${HOME:?}"/.dotfiles ]]; then
+        return 1
+    fi
+
+    pushd "${HOME:?}"/.dotfiles
+    ./stow.sh "$@"
+    popd
+}
+
 unpack() {
     # Usage: unpack <file1> <file2>
     #        unpack foobar.tar.gz
