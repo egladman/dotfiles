@@ -13,7 +13,7 @@ dnf install stow
 2. Clone repo
 
 ```
-git clone git@github.com:egladman/dotfiles.git ~/.dotfiles
+git clone --recursive git@github.com:egladman/dotfiles.git ~/.dotfiles
 ```
 
 *Note:* For this to work without modification you must clone the repo into your home directory
