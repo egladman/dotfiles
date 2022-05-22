@@ -2,42 +2,27 @@
 
 My personal dotfiles managed with [GNU Stow](https://www.gnu.org/software/stow/).
 
-## Install
-
-1. Install GNU Stow
+## Quick Start
 
 ```
-dnf install stow
+git clone --recursive git@github.com:egladman/dotfiles.git ~/.dotfiles; (cd ~/.dotfiles; ./stow.sh)
 ```
 
-2. Clone repo
+## Usage
 
 ```
-git clone --recursive git@github.com:egladman/dotfiles.git ~/.dotfiles
+Wrapper for GNU Stow to simplify dotfile management
+Usage: stow.sh [option]
+
+OPTIONS
+   -h, --help                     Show this help text, and exit
+   -V, --version                  Show version, and exit
+   -S, --stow                     Stow dotfiles (this is the default action and can be omitted)
+   -R, --restow                   Restow dotfiles (first unstow, then stow again). This is
+                                  useful for pruning obsolete symlinks
+   -D, --delete                   Unstow dotfiles
+   -u, --dry-run                  Do not perform any operations that modify the filesystem; merely
+                                  show what would happen.
 ```
 
-*Note:* For this to work without modification you must clone the repo into your home directory
-
-
-3. Change into directory `~/.dotfiles`
-
-```
-cd ~/.dotfiles
-```
-
-4. Initalize dotfiles
-
-```sh
-./stow.sh
-```
-
-*Note:* The following script runs `stow` on all top-level directories in `~/.dotfiles`
-
-## Post Install
-
-
-If at any point you would like to remove the symlinks created by `stow` run the command:
-
-```sh
-./stow.sh --delete
-```
+Note: For the most up-to-date usage run `./stow.sh --help`
