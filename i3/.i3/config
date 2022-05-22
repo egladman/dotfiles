@@ -11,10 +11,11 @@
 
 # Font for window titles. Will also be used by the bar unless a different font
 # is used in the bar {} block below.
+
 # Hack: Setting this to zero hides the title bar
 font pango:monospace 0
 
-default_border pixel 0
+default_border pixel 2
 # hide_edge_borders both
 
 # This font is widely installed, provides lots of unicode glyphs, right-to-left
@@ -43,7 +44,7 @@ exec --no-startup-id "xmodmap $HOME/.Xmodmap"
 exec --no-startup-id xsetroot -solid "#abbad1"
 
 # Screen compositor
-exec_always --no-startup-id picom
+exec_always --no-startup-id picom --experimental-backends
 
 # Polybar
 exec_always --no-startup-id $HOME/.config/polybar/launch.sh
@@ -51,8 +52,8 @@ exec_always --no-startup-id $HOME/.config/polybar/launch.sh
 # Use non-standard mod key
 set $mod Mod4
 
-# Toggle on/off screen compositor
-bindsym $mod+p exec --no-startup-id $HOME/.config/i3/picom-toggle.sh
+# Toggle screen compositor on/off
+bindsym $mod+Shift+p exec $HOME/.config/i3/picom-toggle.sh
 
 # Use pactl to adjust volume in PulseAudio.
 set $refresh_i3status killall -SIGUSR1 i3status
@@ -78,12 +79,10 @@ bindsym $mod+Return exec kitty
 bindsym $mod+Shift+q kill
 
 # start dmenu (a program launcher)
-bindsym $mod+a exec --no-startup-id dmenu_run -l 18
-# A more modern dmenu replacement is rofi:
-# bindsym Mod1+d exec "rofi -modi drun,run -show drun"
-# There also is i3-dmenu-desktop which only displays applications shipping a
-# .desktop file. It is a wrapper around dmenu, so you need that installed.
-# bindsym $mod+d exec --no-startup-id i3-dmenu-desktop
+# By default, dmenu calculates its height as the height of the font used plus 2. There exists a line height patch,
+# I'm just lazy and manually calculating polybar's height given Fira Code's font size. List all available fonts with command: fc-list
+# https://tools.suckless.org/dmenu/patches/line-height/
+bindsym $mod+a exec --no-startup-id dmenu_run -fn 'Fira Code:style=Regular:pixelsize=17' -nb '#2E3440' -nf '#D8DEE9' -sb '#8FBCBB' -sf '#D8DEE9'
 
 # change focus
 bindsym $mod+$left focus left
@@ -212,6 +211,8 @@ mode "resize" {
 }
 
 bindsym $mod+r mode "resize"
+
+client.focused #555555 #555555 #ffffff #2e9ef4 #EBCB8B
 
 # Start i3bar to display a workspace bar (plus the system information i3status
 # finds out, if available)
