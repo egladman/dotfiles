@@ -46,6 +46,8 @@ exec --no-startup-id "xmodmap $HOME/.Xmodmap"
 # Set background image
 exec --no-startup-id feh --bg-tile $HOME/.config/backgrounds/stardust-nord.png
 
+exec --no-startup-id /usr/bin/gnome-keyring-daemon --start --components=secrets
+
 # Screen compositor
 exec_always --no-startup-id picom --experimental-backends
 

@@ -1,0 +1,11 @@
+#!/usr/bin/env sh
+
+# Wrapper for google chrome at supports appending flags
+
+if [ -f "${HOME}/.config/chrome-flags.conf" ]; then
+  while IFS= read -r line || [ -n "$line" ]; do
+    flags=" $line"
+  done < "${HOME}/.config/chrome-flags.conf"
+fi
+
+/usr/bin/google-chrome $flags
