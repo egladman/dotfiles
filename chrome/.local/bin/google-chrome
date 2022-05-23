@@ -4,8 +4,8 @@
 
 if [ -f "${HOME}/.config/chrome-flags.conf" ]; then
   while IFS= read -r line || [ -n "$line" ]; do
-    flags=" $line"
+    set -- "$@" $line
   done < "${HOME}/.config/chrome-flags.conf"
 fi
 
-/usr/bin/google-chrome $flags
+/usr/bin/google-chrome "$@"
