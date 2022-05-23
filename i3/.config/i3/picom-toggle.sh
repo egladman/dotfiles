@@ -7,5 +7,5 @@ if pgrep -x "picom"  > /dev/null 2>&1; then
     killall -q picom
 else
     # Daemonize
-    picom -b --experimental-backends
+    picom -b
 fi

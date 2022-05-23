@@ -1,0 +1,11 @@
+#!/usr/bin/env sh
+
+# Wrapper for picom that supports appending flags
+
+if [ -f "${HOME}/.config/picom-flags.conf" ]; then
+  while IFS= read -r line || [ -n "$line" ]; do
+    flags=" $line"
+  done < "${HOME}/.config/picom-flags.conf"
+fi
+
+/usr/bin/picom $flags
