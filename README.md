@@ -5,7 +5,7 @@ My personal dotfiles managed with [GNU Stow](https://www.gnu.org/software/stow/)
 ## Quick Start
 
 ```
-git clone --recursive git@github.com:egladman/dotfiles.git ~/.dotfiles; (cd ~/.dotfiles; ./stow.sh)
+git clone git@github.com:egladman/dotfiles.git ~/.dotfiles; (cd ~/.dotfiles; git rm dotfiles-*; git submodule update --init --recursive; ./stow.sh)
 ```
 
 ## Usage
