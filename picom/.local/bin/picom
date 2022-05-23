@@ -8,4 +8,4 @@ if [ -f "${HOME}/.config/picom-flags.conf" ]; then
   done < "${HOME}/.config/picom-flags.conf"
 fi
 
-/usr/bin/picom "$@"
+exec /usr/bin/picom "$@"

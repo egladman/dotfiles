@@ -8,4 +8,4 @@ if [ -f "${HOME}/.config/chrome-flags.conf" ]; then
   done < "${HOME}/.config/chrome-flags.conf"
 fi
 
-/usr/bin/google-chrome "$@"
+exec /usr/bin/google-chrome "$@"
