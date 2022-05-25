@@ -243,3 +243,11 @@ nix-search() {
 
     nix-env -qaP '.*'"${1}"'.*'
 }
+
+###########
+# Toy box #
+###########
+
+flip-coin() {
+    [[ $((RANDOM%2)) -eq 1 ]] && printf '%s\n' "heads" || printf '%s\n' "tails"
+}
