@@ -17,3 +17,5 @@ fi
 printf '>  %s\n' "Stowing"
 (cd "$DESTDIR"; ./stow.sh)
 
+printf '>  %s\n' "Successfully installed dotfiles"
+
