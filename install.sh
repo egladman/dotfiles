@@ -2,7 +2,7 @@
 
 set -e
 
-DESTDIR="${DESTDIR:-~/.dotfiles}"
+DESTDIR="${DESTDIR:-${HOME:?}/.dotfiles}"
 
 if [ ! -d "$DESTDIR" ]; then
     printf '>  %s\n' "Cloning git repository"
