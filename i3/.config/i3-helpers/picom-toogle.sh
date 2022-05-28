@@ -4,8 +4,8 @@
 
 if pgrep -x "picom"  > /dev/null 2>&1; then
     # Kill
-    killall -q picom
+    killall -q picom && notify-send picom "Disabled"
 else
     # Daemonize
-    picom -b
+    picom -b && notify-send picom "Enabled"
 fi
