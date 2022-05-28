@@ -25,8 +25,11 @@ cd() {
 }
 
 em() {
-    # Launch text editor. Fallback to vi if emacs is unavailable
-    emacs -nw "$@" || vi "$@"
+    local editor_command=emacs
+    if [[ -S "${TMPDIR:?}/emacs"* ]]; then
+        editor_command=emacslient
+    fi
+    $editor_command -nw "$@"
 }
 
 la() {
@@ -46,7 +49,7 @@ h() {
     helm "$@"
 }
 
-ss() {
+sss() {
     if [[ ! -d "${HOME:?}"/.dotfiles ]]; then
         return 1
     fi
