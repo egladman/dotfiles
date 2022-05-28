@@ -26,7 +26,7 @@ cd() {
 
 em() {
     local editor_command=emacs
-    if [[ -S "${TMPDIR:?}/emacs"* ]]; then
+    if [[ -S "${TMPDIR:-/tmp}/emacs"* ]]; then
         editor_command=emacslient
     fi
     $editor_command -nw "$@"
@@ -43,10 +43,6 @@ mkcd() {
 
 k() {
     kubectl "$@"
-}
-
-h() {
-    helm "$@"
 }
 
 sss() {
