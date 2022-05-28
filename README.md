@@ -4,8 +4,18 @@ My personal dotfiles managed with [GNU Stow](https://www.gnu.org/software/stow/)
 
 ## Quick Start
 
+### Simplified
+
+**Note:** Piping curl to a shell is inherently dangerous. Only do so if you understand the risk.
+
 ```
-git clone git@github.com:egladman/dotfiles.git ~/.dotfiles; (cd ~/.dotfiles; git rm dotfiles-*; git submodule update --init --recursive; ./stow.sh)
+curl https://raw.githubusercontent.com/egladman/dotfiles/master/install.sh | sh
+```
+
+### Advanced
+
+```
+git clone --recursive git@github.com:egladman/dotfiles.git ~/.dotfiles; (cd ~/.dotfiles; ./stow.sh)
 ```
 
 ## Usage
