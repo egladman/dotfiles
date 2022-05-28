@@ -59,7 +59,7 @@ exec_always --no-startup-id $HOME/.config/polybar/launch.sh
 set $mod Mod4
 
 # Toggle screen compositor on/off
-bindsym $mod+Shift+p exec $HOME/.config/i3/picom-toggle.sh
+bindsym $mod+Shift+p exec $HOME/.config/i3-helpers/picom-toggle.sh
 
 # Use pactl to adjust volume in Phttps://unsplash.com/photos/4u2U8EO9OzYhttps://unsplash.com/photos/4u2U8EO9OzYulseAudio.
 set $refresh_i3status killall -SIGUSR1 i3status

@@ -2,10 +2,10 @@
 
 # Wrapper for picom that supports appending flags
 
-if [ -f "${HOME}/.config/picom-flags.conf" ]; then
+if [ -f "${HOME:?}/.config/picom/custom-flags.conf" ]; then
   while IFS= read -r line || [ -n "$line" ]; do
     set -- "$@" $line
-  done < "${HOME}/.config/picom-flags.conf"
+  done < "${HOME:?}/.config/picom/custom-flags.conf"
 fi
 
 exec /usr/bin/picom "$@"

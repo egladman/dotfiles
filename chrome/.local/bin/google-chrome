@@ -2,10 +2,10 @@
 
 # Wrapper for google chrome that supports appending flags
 
-if [ -f "${HOME}/.config/chrome-flags.conf" ]; then
+if [ -f "${HOME:?}/.config/chrome/custom-flags.conf" ]; then
   while IFS= read -r line || [ -n "$line" ]; do
     set -- "$@" $line
-  done < "${HOME}/.config/chrome-flags.conf"
+  done < "${HOME:?}/.config/chrome/custom-flags.conf"
 fi
 
 exec /usr/bin/google-chrome "$@"
