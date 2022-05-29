@@ -1,5 +1,5 @@
 [submodule "emacs/.emacs.d"]
-	path = emacs/.emacs.d
+	path = pkgs/emacs.common.noarch/.emacs.d
 	url = https://github.com/syl20bnr/spacemacs
 [submodule "dotfiles-immuta"]
 	path = dotfiles-immuta

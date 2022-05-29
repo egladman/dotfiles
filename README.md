@@ -15,14 +15,14 @@ curl https://raw.githubusercontent.com/egladman/dotfiles/master/install.sh | sh
 ### Advanced
 
 ```
-git clone --recursive git@github.com:egladman/dotfiles.git ~/.dotfiles; (cd ~/.dotfiles; ./stow.sh)
+git clone --recursive git@github.com:egladman/dotfiles.git ~/.dotfiles; (cd ~/.dotfiles; ./bin/sstow pkgs)
 ```
 
 ## Usage
 
 ```
-Wrapper for GNU Stow to simplify dotfile management
-Usage: stow.sh [option]
+Wrapper for GNU Stow to simplify cross-platform dotfile management
+Usage: sstow [option]
 
 OPTIONS
    -h, --help                     Show this help text, and exit
@@ -35,4 +35,4 @@ OPTIONS
                                   show what would happen.
 ```
 
-Note: For the most up-to-date usage run `./stow.sh --help`
+Note: For the most up-to-date usage run `./bin/sstow --help`

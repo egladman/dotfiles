@@ -42,7 +42,6 @@ This function should only modify configuration layer settings."
      yaml
      markdown
      auto-completion
-     better-defaults
      emacs-lisp
      git
      helm

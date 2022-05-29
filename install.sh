@@ -15,7 +15,6 @@ else
 fi
 
 printf '>  %s\n' "Stowing"
-(cd "$DESTDIR"; ./stow.sh)
+(cd "$DESTDIR"; ./bin/sstow pkgs)
 
 printf '>  %s\n' "Successfully installed dotfiles"
-

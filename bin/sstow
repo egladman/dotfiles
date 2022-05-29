@@ -1,0 +1,194 @@
+#!/usr/bin/env bash
+
+# Fail quickly if invoked by an older version of Bash.
+[[ "${BASH_VERSION::1}" -ge 4 ]] || exit 128
+
+readonly _VERSION="1.0.0"
+
+TARGETOS="${TARGETOS}"
+TARGETARCH="${TARGETARCH:-$(uname -m)}"
+
+LOGLEVEL="${LOGLEVEL:-20}"
+# Level          Numeric
+# verbose        5
+# debug          10
+# info           20
+# error          40
+
+_STOWOPTS=($STOWOPTS)
+read -r -d '' _USAGE <<-EOF
+Wrapper for GNU Stow to simplify cross-platform dotfile management
+Usage: ${0##*/} [option]
+
+OPTIONS
+   -h, --help                     Show this help text, and exit
+   -V, --version                  Show version, and exit
+   -S, --stow                     Stow dotfiles (this is the default action and can be omitted)
+   -R, --restow                   Restow dotfiles (first unstow, then stow again). This is
+                                  useful for pruning obsolete symlinks
+   -D, --delete                   Unstow dotfiles
+   -u, --dry-run                  Do not perform any operations that modify the filesystem; merely
+                                  show what would happen.
+EOF
+
+if [[ $LOGLEVEL -le 10 ]]; then
+    _STOWOPTS+=('-v')
+fi
+
+__log() {
+    [[ $LOGLEVEL -gt 20 ]] && return
+    printf '[INFO] %s\n' "$*"
+}
+
+__debug() {
+    [[ $LOGLEVEL -gt 10 ]] && return
+    printf '[DEBU] %s\n' "$*"
+}
+
+__err() {
+    [[ $LOGLEVEL -gt 40 ]] && return
+    printf '[ERRO] %s\n' "$*"
+}
+
+__split() {
+    # Usage: split "string" "delimiter"
+    IFS=$'\n' read -d "" -ra arr <<< "${1//$2/$'\n'}"
+    printf '%s\n' "${arr[@]}"
+}
+
+__basename() {
+    # Usage: basename "path" ["suffix"]
+    local tmp
+
+    tmp=${1%"${1##*[!/]}"}
+    tmp=${tmp##*/}
+    tmp=${tmp%"${2/"$tmp"}"}
+
+    printf '%s\n' "${tmp:-/}"
+}
+
+__gather_facts() {
+    [[ -n "$TARGETOS" ]] && return
+    case "$OSTYPE" in
+        darwin*)
+            TARGETOS=darwin
+            ;;
+        linux*)
+            TARGETOS=linux
+            ;;
+        *)
+            __log "Unable to determine system operating system. Defaulting to Linux"
+            TARGETOS=linux
+            ;;
+    esac
+}
+
+action_count=0
+while [[ $# -gt 1 ]]; do
+    case "$1" in
+	-S|--stow)
+	    __log "Stowing..."
+	    action_count=$((action_count+1))
+	    ;;
+	-R|--restow)
+	    __log "Restowing..."
+	    _STOWOPTS+=('-R')
+	    action_count=$((action_count+1))
+	    ;;
+	-D|--delete)
+	    __log "Deleting..."
+	    _STOWOPTS+=('-D')
+	    action_count=$((action_count+1))
+	    ;;
+	-u|--dry-run)
+	    __log "Performing dry run..."
+	    _STOWOPTS+=('--no')
+	    ;;
+  -h|--help)
+      printf '%s\n' "$_USAGE"
+	    exit 0
+      ;;
+  -v|--version)
+	    printf '%s\n' "$_VERSION"
+	    exit 0
+      ;;
+	-*|--*)
+	    __err "Unsupported option. Run: ${0##*/} help "
+	    exit 1
+	    ;;
+    esac
+    shift
+done
+
+if [[ $action_count -gt 1 ]]; then
+    __err "Conflicting options present"
+    exit 1
+fi
+
+declare -a submodules
+declare -a packages
+
+if [[ ! -d "$1" ]]; then
+    __err "Directory '$1' does not exist"
+    exit 1
+fi
+
+for path in "${1}"/*; do
+    [[ ! -d "$path" ]] && continue
+
+    # Check for git submodules
+    if [[ -f "${path}"/.git ]]; then
+        submodules=("${submodules[@]}" "$path")
+        packages=("${packages[@]}" "${path}"/*/*)
+    # Exclude submodule child paths
+    elif [[ ! " ${submodules[@]} " =~ " ${path%/*} " ]]; then
+        packages=("${packages[@]}" "$path")
+    fi
+done
+
+__log "Found packages: ${packages[*]}"
+
+__debug "Gathering facts..."
+__gather_facts
+
+for path in "${packages[@]}"; do
+    package_name="$(__basename "$path")"
+
+    __log "Traversing path '${path}'"
+
+    arr=($(__split "$package_name" "."))
+    __debug "Variable arr items: '${arr[*]}'"
+
+    if [[ ${#arr[@]} -lt 3 ]]; then
+        __err "Path '$path' named incorrectly. Expected suffix '.<os>.<arch>', but one (or more) extensions are missing."
+        exit
+    fi
+
+    if [[ "${arr[-1]}" != "noarch" ]] && [[ "${arr[-1]}" != "$TARGETARCH" ]]; then
+        __debug "Skipping path '$path'. Incompatible architecture."
+        continue
+    fi
+
+    if [[ "${arr[-2]}" != "common" ]] && [[ "${arr[-2]}" != "$TARGETOS" ]]; then
+        __debug "Skipping path '$path'. Incompatible operating system."
+        continue
+    fi
+
+    if [[ "$path" == *\/* ]]; then
+        __debug "Entering directory '${path}'"
+        pushd "${path%/*}" &> /dev/null
+        stow "${_STOWOPTS[@]}" -t "${HOME:?}" "${path#*/}"
+        return_code=$?
+        popd &> /dev/null
+        __debug "Exiting directory '${path%/*}'"
+    else
+        stow "${_STOWOPTS[@]}" "$path"
+        return_code=$?
+    fi
+
+    if [[ $return_code -ne 0 ]]; then
+        __err "Command 'stow' returned non-zero code"
+        exit 1
+    fi
+    unset return_code
+done
