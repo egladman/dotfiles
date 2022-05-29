@@ -31,7 +31,7 @@ exec --no-startup-id dex-autostart --autostart --environment i3
 
 # xss-lock grabs a logind suspend inhibit lock and will use i3lock to lock the
 # screen before suspend. Use loginctl lock-session to lock your screen.
-exec --no-startup-id xss-lock --transfer-sleep-lock -- i3lock --nofork
+exec --no-startup-id xss-lock --transfer-sleep-lock -- i3lock --image=$HOME/.config/backgrounds/stardust-nord.png --tiling --nofork
 
 # NetworkManager is the most popular way to manage wireless networks on Linux,
 # and nm-applet is a desktop environment-independent system tray GUI for it.
@@ -84,7 +84,17 @@ floating_modifier $mod
 # start a terminal
 bindsym $mod+Return exec kitty
 
+# Launch monitor configuration gui
 bindsym $mod+p exec arandr
+
+# Launch audio configuration gui
+bindsym $mod+o exec pavucontrol
+
+# Launch file explorer
+bindsym $mod+period exec nautilus
+
+# Lock screen
+bindsym $mod+Shift+i exec loginctl lock-session
 
 # kill focused window
 bindsym $mod+Shift+q kill
@@ -230,4 +240,6 @@ client.unfocused        #434C5E #434C5E #ffffff #292d2e   #2E3440
 client.urgent           #2f343a #434C5E #ffffff #900000   #BF616A
 client.placeholder      #434C5E #434C5E #ffffff #000000   #ECEFF4
 
+# Run xprop to determine window names
 for_window [class="Arandr"] floating enable
+for_window [class="Pavucontrol"] floating enable
