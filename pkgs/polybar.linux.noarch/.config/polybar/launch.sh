@@ -3,8 +3,6 @@
 # Turn on logging with the following environment variable
 #   POLYBAR_ENABLE_LOGGING
 
-POLYBAR_ENABLE_LOGGINGx=fwefwefe
-
 __find_monitors() {
     # Prints active monitors by parsing xrandr with only bash.
 
