@@ -25,11 +25,11 @@ cd() {
 }
 
 em() {
-    local editor_command=emacs
-    if [[ -S "${TMPDIR:-/tmp}/emacs"* ]]; then
-        editor_command=emacslient
+    local editor_command=(emacs)
+    if [[ -S "${TMPDIR:-/tmp}/emacs.socket" ]]; then
+        editor_command=(emacsclient --socket-name "${TMPDIR:-/tmp}/emacs.socket" )
     fi
-    $editor_command -nw "$@"
+    "${editor_command[@]}" -nw "$@"
 }
 
 la() {

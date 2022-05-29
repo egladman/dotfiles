@@ -1,3 +1,5 @@
+TMPDIR="${TMPDIR:-/tmp}"
+
 if [[ "$OSTYPE" == "darwin"* ]]; then
     # Added by Nix installer
     if [ -e "${HOME}/.nix-profile/etc/profile.d/nix.sh" ]; then

@@ -46,6 +46,9 @@ exec --no-startup-id "xmodmap $HOME/.Xmodmap"
 # Set background image
 exec --no-startup-id feh --bg-tile $HOME/.config/backgrounds/stardust-nord.png
 
+# Run emacs daemon
+exec --no-startup-id emacs --daemon=$TMPDIR/emacs.socket
+
 # 
 exec --no-startup-id /usr/bin/gnome-keyring-daemon --start --components=secrets
 
