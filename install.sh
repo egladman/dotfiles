@@ -2,7 +2,7 @@
 
 set -e
 
-DESTDIR="${DESTDIR:-${HOME:?}/.dotfiles}"
+DESTDIR="${DESTDIR:-${HOME:?}/dotfiles}"
 INCLUDE_PRIVATE="${INCLUDE_PRIVATE:-0}"
 
 if [ ! -d "$DESTDIR" ]; then
