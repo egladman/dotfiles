@@ -2,6 +2,13 @@
 
 My personal dotfiles managed with [GNU Stow](https://www.gnu.org/software/stow/).
 
+## Features
+
+- Supports Linux and MacOS
+- Supports multiple architectures
+- Written in pure bash with no dependencies on external processes/programs (besides stow)
+- Git submodule support
+
 ## Quick Start
 
 ### Simplified
@@ -22,7 +29,7 @@ git clone --recursive git@github.com:egladman/dotfiles.git ~/.dotfiles; (cd ~/.d
 
 ```
 Wrapper for GNU Stow to simplify cross-platform dotfile management
-Usage: sstow [option]
+Usage: sstow [option] path/to/pkgs
 
 OPTIONS
    -h, --help                     Show this help text, and exit
@@ -36,3 +43,13 @@ OPTIONS
 ```
 
 Note: For the most up-to-date usage run `./bin/sstow --help`
+
+### Advanced
+
+Override auto-detected system facts with the following environment variables:
+
+- `TARGETARCH`
+  - Values: `x86_64, aarch64`
+  - Details: Run `uname -m` if your architecture isn't listed
+- `TARGETOS`
+  - Values: `linux, darwin`

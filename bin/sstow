@@ -18,7 +18,7 @@ LOGLEVEL="${LOGLEVEL:-20}"
 _STOWOPTS=($STOWOPTS)
 read -r -d '' _USAGE <<-EOF
 Wrapper for GNU Stow to simplify cross-platform dotfile management
-Usage: ${0##*/} [option]
+Usage: ${0##*/} [option] path/to/pkgs
 
 OPTIONS
    -h, --help                     Show this help text, and exit
