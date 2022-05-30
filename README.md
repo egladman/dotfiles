@@ -22,7 +22,7 @@ curl https://raw.githubusercontent.com/egladman/dotfiles/master/install.sh | sh
 ### Advanced
 
 ```
-git clone --recursive git@github.com:egladman/dotfiles.git ~/.dotfiles; (cd ~/.dotfiles; ./bin/sstow pkgs)
+git clone --recursive git@github.com:egladman/dotfiles.git ~/dotfiles; (cd ~/dotfiles; ./bin/sstow pkgs)
 ```
 
 ## Usage
