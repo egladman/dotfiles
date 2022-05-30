@@ -43,8 +43,8 @@ exec --no-startup-id "xmodmap $HOME/.Xmodmap"
 # Set background color
 #exec_always --no-startup-id xsetroot -solid "#4C566A"
 
-# Set background image
-exec --no-startup-id feh --bg-tile $HOME/.config/backgrounds/stardust-nord.png
+# Set background image. Always rerun in case monitor layout changes
+exec_always --no-startup-id feh --no-xinerama --bg-tile $HOME/.config/backgrounds/stardust-nord.png
 
 # Run emacs daemon
 exec --no-startup-id emacs --daemon=$TMPDIR/emacs.socket
@@ -232,6 +232,29 @@ mode "resize" {
 }
 
 bindsym $mod+r mode "resize"
+
+# Move a workspace to another monitor (multi monitor setup)
+#   Original Idea: https://gist.github.com/magujs/f8060343b9aedc7e6514
+mode "move_workspace" {
+        # Vim bindings
+        bindsym $up move workspace to output up
+        bindsym $down move workspace to output down
+        bindsym $left move workspace to output left
+        bindsym $right move workspace to output right
+
+        # arrow-keys bindings
+        bindsym Up move workspace to output up
+        bindsym Down move workspace to output down
+        bindsym Left move workspace to output left
+        bindsym Right move workspace to output right
+
+        # back to normal: Enter or Escape or Mod1+r
+        bindsym Return mode "default"
+        bindsym Escape mode "default"
+        bindsym $mod+x mode "default"
+}
+
+bindsym $mod+x mode "move_workspace"
 
 # class                 border  backgr. text    indicator child_border
 client.focused          #434C5E #434C5E #ffffff #2e9ef4   #EBCB8B
