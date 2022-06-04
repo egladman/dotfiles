@@ -14,7 +14,8 @@ __run() {
         exit 1
     fi
 
-    while read -r line || [[ -n "$line" ]]; do
+    while read -r line; do
+        [[ -z "$line" ]] && continue
         declare -a arr=($line) # Split by space
         printf '%s\n' "> ${arr[-1]}"
         "$@" "${arr[@]}"
@@ -27,12 +28,12 @@ __run() {
 
 __install_all() {
     PACKAGELIST=dnf-packages.list __run dnf install --assumeyes
-    PACKAGELIST=flatpak-packages.list __run flatpak install --assumeyes --noninteractive
+    PACKAGELIST=flatpak-packages.list __run flatpak install --system --assumeyes --noninteractive
 }
 
 __update_all() {
     PACKAGELIST=dnf-packages.list __run dnf update --assumeyes
-    PACKAGELIST=flatpak-packages.list __run flatpak update --assumeyes --noninteractive
+    PACKAGELIST=flatpak-packages.list __run flatpak update --system --assumeyes --noninteractive
 }
 
 main() {
