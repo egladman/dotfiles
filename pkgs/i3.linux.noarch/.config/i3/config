@@ -37,6 +37,9 @@ exec --no-startup-id xss-lock --transfer-sleep-lock -- i3lock --image=$HOME/.con
 # and nm-applet is a desktop environment-independent system tray GUI for it.
 exec --no-startup-id nm-applet
 
+# Music player daemon
+exec --no-startup-id mpd
+
 # Remap default keyboard modifers
 exec --no-startup-id "xmodmap $HOME/.Xmodmap"
 
@@ -266,3 +269,4 @@ client.placeholder      #434C5E #434C5E #ffffff #000000   #ECEFF4
 # Run xprop to determine window names
 for_window [class="Arandr"] floating enable
 for_window [class="Pavucontrol"] floating enable
+for_window [floating] move position center

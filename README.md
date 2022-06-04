@@ -53,3 +53,10 @@ Override auto-detected system facts with the following environment variables:
   - Details: Run `uname -m` if your architecture isn't listed
 - `TARGETOS`
   - Values: `linux, darwin`
+
+
+## Install os/flatpak packages system-wide
+
+```
+sudo ./bootstrap.sh install
+```

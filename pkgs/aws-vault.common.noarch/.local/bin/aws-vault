@@ -1,0 +1,89 @@
+#!/usr/bin/env bash
+
+set -e
+
+# Shim for aws-vault that supports overriding sso_role_name via environment
+# variable. Install to ~/.local/bin/aws-vault for best results.
+
+# If environment variable AWS_SSO_ROLE_NAME is set, then a copied/modified
+# to use the desired sso_role_name. The original aws config is never touched. 
+
+# Honor env AWS_CONFIG_FILE if it's already set
+OLD_AWS_CONFIG_FILE="$AWS_CONFIG_FILE"
+DEFAULT_AWS_CONFIG_FILE="${HOME:?}/.aws/config"
+SELECTED_AWS_CONFIG_FILE="${OLD_AWS_CONFIG_FILE:-$DEFAULT_AWS_CONFIG_FILE}"
+
+__exclude_path() {
+    local tmp
+    tmp=":$PATH:"
+    tmp="${tmp//:$1:/:}"
+    tmp="${tmp#:}"
+    tmp="${tmp%:}"
+    printf '%s' "$tmp"
+}
+
+__aws_new_config() {
+    local aws_config
+    aws_config=$(mktemp)
+
+    while IFS='=' read -r line; do
+        case "$line" in
+            '['*']')
+                # Pass through lines that are sections
+                printf '\n%s\n' "$line" >> "$aws_config"
+                continue
+                ;;
+            '#'*)
+                # Skip over lines that contain comments
+                continue
+                ;;
+        esac
+
+        key="${line/[[:space:]]\=[[:space:]]*}"
+        val="${line/*\=[[:space:]]}"
+
+        # Override sso_role_name
+        [[ "$key" = 'sso_role_name' ]] && val="$AWS_SSO_ROLE_NAME"
+
+        [[ -z "$key" ]] && continue
+
+        printf '%s = %s\n' "$key" "$val" >> "$aws_config"
+    done < "$SELECTED_AWS_CONFIG_FILE"
+    printf '%s' "$aws_config"
+}
+
+__aws_vault_exec() {
+    AWS_CONFIG_FILE="$(__aws_new_config)"
+    export AWS_CONFIG_FILE
+
+    PATH="${FAKEPATH:?}" aws-vault "$@"
+    rm "${AWS_CONFIG_FILE:?}"
+
+    # Cleanup
+    unset AWS_CONFIG_FILE
+    if [[ "$SELECTED_AWS_CONFIG_FILE" == "$OLD_AWS_CONFIG_FILE" ]]; then
+        export AWS_CONFIG_FILE="$OLD_AWS_CONFIG_FILE"
+    fi
+}
+
+main() {
+    if [[ ! -f "${SELECTED_AWS_CONFIG_FILE}" ]]; then
+        printf 'Shim: %s\n' "aws config '${SELECTED_AWS_CONFIG_FILE}' does not exist."
+        exit 1
+    fi
+
+    # This is gross, but necessary. Filter out the this scripts parent dir for
+    # we don't recursively call the shim
+    FAKEPATH="$(__exclude_path "$(realpath "$(dirname "$0")")")"
+
+    if [[ -n "$AWS_SSO_ROLE_NAME" ]]; then
+       printf 'Shim: %s\n' "Intercepting command."
+       __aws_vault_exec "$@"
+       exit 0
+    fi
+
+    printf 'Shim: %s\n' "Passing through command unmodified."
+    PATH="${FAKEPATH:?}" exec aws-vault "$@"
+}
+
+main "$@"
