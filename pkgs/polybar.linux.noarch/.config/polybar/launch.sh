@@ -23,26 +23,15 @@ __find_monitors() {
 
     declare -a wrkarr monitors
     for l in "$@"; do
-        wrkarr=($l)               # Split line into another array
-        monitors+=(${wrkarr[-1]}) # Grab the last column from the line
+        wrkarr=($l)                            # Split line into another array
+        if [[ "${wrkarr[1]}" == '+*'* ]]; then # We found the primary monitor
+            wrkarr[-1]="*${wrkarr[-1]}"
+        fi
+        monitors+=(${wrkarr[-1]})              # Grab the last column from the line
     done
 
     printf '%s\n' "${monitors[@]}"
 }
-
-if [[ "$POLYBAR_LAUNCHER_ENABLE_LOGGING" -eq 1 ]]; then
-    if [[ ! -d "${TMPDIR:-/tmp}/polybar" ]]; then
-        mkdir -p "${TMPDIR:-/tmp}/polybar"
-    fi
-
-    # Print line breaks
-    printf '%s\n' "---" | tee -a "${TMPDIR:-/tmp}/polybar/launcher.log"
-    for m in "${selected_monitors[@]}"; do
-        for l in "${selected_positions[@]}"; do
-            printf '%s\n' "---" | tee -a "${TMPDIR:-/tmp}/polybar/${m}-${l}.log"
-        done
-    done
-fi
 
 selected_positions=($POLYBAR_LAUNCHER_POSITIONS) # Split by space
 selected_monitors=($POLYBAR_LAUNCHER_MONITORS)   # Split by space
@@ -56,6 +45,10 @@ if [[ ${#selected_monitors[@]} -eq 0 ]]; then
 fi
 
 if [[ "$POLYBAR_LAUNCHER_ENABLE_LOGGING" -eq 1 ]]; then
+    if [[ ! -d "${TMPDIR:-/tmp}/polybar" ]]; then
+        mkdir -p "${TMPDIR:-/tmp}/polybar"
+    fi
+
     printf '%s\n' "Initializing with monitors: ${selected_monitors[*]}" | tee -a "${TMPDIR:-/tmp}/polybar/launcher.log"
     printf '%s\n' "Initializing with bars: ${selected_positions[*]}" | tee -a "${TMPDIR:-/tmp}/polybar/launcher.log"
 fi
@@ -68,7 +61,18 @@ fi
 
 # Start polybar on each monitor and each position
 for m in "${selected_monitors[@]}"; do
+    is_primary=0
+    if [[ "$m" == '*'* ]]; then
+        is_primary=1
+        m="${m##'*'}" # Remove wildcard
+        printf '%s\n' "Monitor '$m' is primary" | tee -a "${TMPDIR:-/tmp}/polybar/launcher.log"
+    fi
+
     for l in "${selected_positions[@]}"; do
+        if [[ $is_primary -eq 1 ]]; then
+            l="${l}-primary"
+        fi
+
         if [[ "$POLYBAR_LAUNCHER_ENABLE_LOGGING" -eq 1 ]]; then
             printf '%s\n' "Starting $l polybar on monitor '$m'" | tee -a "${TMPDIR:-/tmp}/polybar/${m}-${l}.log"
         fi

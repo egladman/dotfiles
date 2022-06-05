@@ -22,7 +22,9 @@ __i3_subscribe_to_event() {
 }
 
 __i3_print_focused_layout() {
-    printf "$label_name %s\n" "$(__i3_get_focused_layout)"
+    local response
+    response="$(__i3_get_focused_layout)"
+    printf "$label_name %s\n" "${response:-wtf}"
 }
 
 # Subscribing to event 'bindings' is kinda hacky, and will likely break
