@@ -1,5 +1,17 @@
 TMPDIR="${TMPDIR:-/tmp}"
 
+if [[ -d "/etc/profile.d" ]]; then
+    for f in /etc/profile.d/*.sh; do
+        source "$f"
+    done
+fi
+
+if [[ -d "${HOME}/.profile.d" ]]; then
+    for f in "${HOME}"/.profile.d/*.sh; do
+        source "$f"
+    done
+fi
+
 if [[ "$OSTYPE" == "darwin"* ]]; then
     # Added by Nix installer
     if [ -e "${HOME}/.nix-profile/etc/profile.d/nix.sh" ]; then
