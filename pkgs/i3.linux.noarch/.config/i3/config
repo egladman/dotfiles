@@ -37,6 +37,9 @@ exec --no-startup-id xss-lock --transfer-sleep-lock -- i3lock --image=$HOME/.con
 # and nm-applet is a desktop environment-independent system tray GUI for it.
 exec --no-startup-id nm-applet
 
+# Bluetooth
+exec --no-startup-id blueman-applet
+
 # Music player daemon
 exec --no-startup-id mpd
 
@@ -46,8 +49,8 @@ exec --no-startup-id "xmodmap $HOME/.Xmodmap"
 # Set background color
 #exec_always --no-startup-id xsetroot -solid "#4C566A"
 
-# Set background image. Always rerun in case monitor layout changes
-exec_always --no-startup-id feh --no-xinerama --bg-tile $HOME/.config/backgrounds/stardust-nord.png
+# TODO use autorandr post switch? 
+exec_always --no-startup-id autorandr --change && feh --no-xinerama --bg-tile $HOME/.config/backgrounds/stardust-nord.png
 
 # Run emacs daemon
 exec --no-startup-id emacs --daemon=$TMPDIR/emacs.socket
