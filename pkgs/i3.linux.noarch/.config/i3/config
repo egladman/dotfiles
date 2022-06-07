@@ -13,9 +13,11 @@
 # is used in the bar {} block below.
 
 # Hack: Setting this to zero hides the title bar
-font pango:monospace 0
 
-default_border pixel 2
+
+font pango:Fira Code Regular 8
+
+#default_border pixel 2
 hide_edge_borders smart
 
 # This font is widely installed, provides lots of unicode glyphs, right-to-left
@@ -268,7 +270,8 @@ mode "move_workspace" {
 bindsym $mod+x mode "move_workspace"
 
 # class                 border  backgr. text    indicator child_border                                                 
-client.focused          #2d2a2e #2d2a2e #fcfcfa #78dce8   #ffd866
+client.focused          #ffd866 #ffd866 #2d2a2e #78dce8   #ffd866
+#client.focused          #2d2a2e #2d2a2e #fcfcfa #78dce8   #ffd866
 client.focused_inactive #2d2a2e #2d2a2e #fcfcfa #2d2a2e   #2d2a2e
 client.unfocused        #2d2a2e #2d2a2e #fcfcfa #2d2a2e   #2d2a2e
 client.urgent           #ff6188 #2d2a2e #fcfcfa #ff6188   #ff6188
@@ -279,4 +282,4 @@ for_window [class="Arandr"] floating enable
 for_window [class="Pavucontrol"] floating enable
 for_window [floating] move position center
 
-#for_window [class=".*"] border pixel 2
+for_window [class="kitty"] border pixel 1
