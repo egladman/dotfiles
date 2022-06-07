@@ -77,12 +77,10 @@ main() {
     FAKEPATH="$(__exclude_path "$(realpath "$(dirname "$0")")")"
 
     if [[ -n "$AWS_SSO_ROLE_NAME" ]]; then
-       printf 'Shim: %s\n' "Intercepting command."
        __aws_vault_exec "$@"
        exit 0
     fi
 
-    printf 'Shim: %s\n' "Passing through command unmodified."
     PATH="${FAKEPATH:?}" exec aws-vault "$@"
 }
 
