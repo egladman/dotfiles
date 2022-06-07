@@ -26,8 +26,9 @@ cd() {
 
 em() {
     local editor_command=(emacs)
-    if [[ -S "${TMPDIR:-/tmp}/emacs.socket" ]]; then
-        editor_command=(emacsclient --socket-name "${TMPDIR:-/tmp}/emacs.socket" )
+    local socket_file="${HOME}/.emacs.socket"
+    if [[ -S "$socket_file" ]]; then
+        editor_command=(emacsclient --socket-name "$socket_file" )
     fi
     TERM=xterm-emacs "${editor_command[@]}" -nw "$@"
 }
@@ -43,16 +44,6 @@ mkcd() {
 
 k() {
     kubectl "$@"
-}
-
-sss() {
-    if [[ ! -d "${HOME:?}"/.dotfiles ]]; then
-        return 1
-    fi
-
-    pushd "${HOME:?}"/.dotfiles
-    ./stow.sh "$@"
-    popd
 }
 
 unpack() {

@@ -57,7 +57,7 @@ exec --no-startup-id "xmodmap $HOME/.Xmodmap"
 exec_always --no-startup-id autorandr --change && feh --no-xinerama --bg-tile $HOME/.config/backgrounds/grey.png
 
 # Run emacs daemon
-exec --no-startup-id emacs --daemon=$TMPDIR/emacs.socket
+exec --no-startup-id emacs --daemon=$HOMW/.emacs.socket
 
 # 
 exec --no-startup-id /usr/bin/gnome-keyring-daemon --start --components=secrets
