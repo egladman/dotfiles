@@ -31,7 +31,7 @@ exec --no-startup-id dex-autostart --autostart --environment i3
 
 # xss-lock grabs a logind suspend inhibit lock and will use i3lock to lock the
 # screen before suspend. Use loginctl lock-session to lock your screen.
-exec --no-startup-id xss-lock --transfer-sleep-lock -- i3lock --image=$HOME/.config/backgrounds/stardust-nord.png --tiling --nofork
+exec --no-startup-id xss-lock --transfer-sleep-lock -- i3lock --image=$HOME/.config/backgrounds/grey.png --tiling --nofork
 
 # NetworkManager is the most popular way to manage wireless networks on Linux,
 # and nm-applet is a desktop environment-independent system tray GUI for it.
@@ -46,11 +46,15 @@ exec --no-startup-id mpd
 # Remap default keyboard modifers
 exec --no-startup-id "xmodmap $HOME/.Xmodmap"
 
-# Set background color
-#exec_always --no-startup-id xsetroot -solid "#4C566A"
+# Set background color.  xsetroot is not compatiable with picom. use hsetroot
+#exec_always --no-startup-id xsetroot -solid "#5a575b"
 
 # TODO use autorandr post switch? 
-exec_always --no-startup-id autorandr --change && feh --no-xinerama --bg-tile $HOME/.config/backgrounds/stardust-nord.png
+#exec_always --no-startup-id autorandr --change && feh --no-xinerama --bg-tile $HOME/.config/backgrounds/stardust-nord.png
+
+# Use monokia-pro background complimentary color
+# https://www.colorhexa.com/403e41 
+exec_always --no-startup-id autorandr --change && feh --no-xinerama --bg-tile $HOME/.config/backgrounds/grey.png
 
 # Run emacs daemon
 exec --no-startup-id emacs --daemon=$TMPDIR/emacs.socket
@@ -262,14 +266,16 @@ mode "move_workspace" {
 
 bindsym $mod+x mode "move_workspace"
 
-# class                 border  backgr. text    indicator child_border
-client.focused          #434C5E #434C5E #ffffff #2e9ef4   #EBCB8B
-client.focused_inactive #434C5E #434C5E #ffffff #484e50   #4C566A
-client.unfocused        #434C5E #434C5E #ffffff #292d2e   #2E3440
-client.urgent           #2f343a #434C5E #ffffff #900000   #BF616A
-client.placeholder      #434C5E #434C5E #ffffff #000000   #ECEFF4
+# class                 border  backgr. text    indicator child_border                                                 
+client.focused          #2d2a2e #2d2a2e #fcfcfa #78dce8   #ffd866
+client.focused_inactive #2d2a2e #2d2a2e #fcfcfa #2d2a2e   #2d2a2e
+client.unfocused        #2d2a2e #2d2a2e #fcfcfa #2d2a2e   #2d2a2e
+client.urgent           #ff6188 #2d2a2e #fcfcfa #ff6188   #ff6188
+client.placeholder      #2d2a2e #2d2a2e #fcfcfa #2d2a2e   #ECEFF4
 
 # Run xprop to determine window names
 for_window [class="Arandr"] floating enable
 for_window [class="Pavucontrol"] floating enable
 for_window [floating] move position center
+
+#for_window [class=".*"] border pixel 2

@@ -29,7 +29,7 @@ em() {
     if [[ -S "${TMPDIR:-/tmp}/emacs.socket" ]]; then
         editor_command=(emacsclient --socket-name "${TMPDIR:-/tmp}/emacs.socket" )
     fi
-    "${editor_command[@]}" -nw "$@"
+    TERM=xterm-emacs "${editor_command[@]}" -nw "$@"
 }
 
 la() {
