@@ -113,7 +113,8 @@ bindsym $mod+Shift+q kill
 # By default, dmenu calculates its height as the height of the font used plus 2. There exists a line height patch,
 # I'm just lazy and manually calculating polybar's height given Fira Code's font size. List all available fonts with command: fc-list
 # https://tools.suckless.org/dmenu/patches/line-height/
-bindsym $mod+a exec --no-startup-id dmenu_run -fn 'Fira Code:style=Regular:pixelsize=17' -nb '#2E3440' -nf '#D8DEE9' -sb '#8FBCBB' -sf '#D8DEE9'
+#                                                                                         dull black    white         orange        white
+bindsym $mod+a exec --no-startup-id dmenu_run -fn 'Fira Code:style=Regular:pixelsize=17' -nb '#403e41' -nf '#fcfcfa' -sb '#fc9867' -sf '#fcfcfa'
 
 # change focus
 bindsym $mod+$left focus left
