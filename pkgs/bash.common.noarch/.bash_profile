@@ -1,12 +1,13 @@
 TMPDIR="${TMPDIR:-/tmp}"
 
-if [[ -d "/etc/profile.d" ]]; then
+
+if [[ -d "/etc/profile.d" ]] && [[ "$OSTYPE" == "linux"* ]]; then
     for f in /etc/profile.d/*.sh; do
-        source "$f"
+       source "$f"
     done
 fi
 
-if [[ -d "${HOME}/.profile.d" ]]; then
+if [[ -d "${HOME}/.profile.d" ]] && [[ "$OSTYPE" == "linux"* ]]; then
     for f in "${HOME}"/.profile.d/*.sh; do
         source "$f"
     done
