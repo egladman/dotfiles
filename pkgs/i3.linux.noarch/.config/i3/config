@@ -271,9 +271,8 @@ bindsym $mod+x mode "move_workspace"
 
 # class                 border  backgr. text    indicator child_border                                                 
 client.focused          #ffd866 #ffd866 #2d2a2e #78dce8   #ffd866
-#client.focused          #2d2a2e #2d2a2e #fcfcfa #78dce8   #ffd866
-client.focused_inactive #2d2a2e #2d2a2e #fcfcfa #2d2a2e   #2d2a2e
-client.unfocused        #2d2a2e #2d2a2e #fcfcfa #2d2a2e   #2d2a2e
+client.focused_inactive #2d2a2e #403e41 #fcfcfa #2d2a2e   #2d2a2e
+client.unfocused        #2d2a2e #403e41 #fcfcfa #2d2a2e   #2d2a2e
 client.urgent           #ff6188 #2d2a2e #fcfcfa #ff6188   #ff6188
 client.placeholder      #2d2a2e #2d2a2e #fcfcfa #2d2a2e   #ECEFF4
 
