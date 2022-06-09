@@ -46,6 +46,29 @@ k() {
     kubectl "$@"
 }
 
+git-cherrypick() {
+    # Usage: git-cherrypick ebe6942..905e279 dcek8bg
+
+    # Rewrites commit ranges to be inclusive of both range endpoints. By default
+    # range <commit1>..<commit2> does not include the starting commit in the
+    # range. That's wack
+
+    declare -a argv=("$@")
+    for i in "${!argv[@]}"; do
+        echo "yeet2 ${argv[$i]}"
+        if [[ "${argv[$i]}" =~ ^([A-Za-z0-9]+)(\^)?\.\.([A-Za-z0-9]+)$ ]]; then
+            if [[ "${BASH_REMATCH[2]}" == "^" ]]; then
+                printf "${FUNCNAME[0]}: Unexpected character ^"
+                return 1
+            fi
+
+            argv[$i]="${BASH_REMATCH[1]}^..${BASH_REMATCH[3]}"
+        fi
+    done
+
+    git cherry-pick "${argv[@]}"
+}
+
 unpack() {
     # Usage: unpack <file1> <file2>
     #        unpack foobar.tar.gz
