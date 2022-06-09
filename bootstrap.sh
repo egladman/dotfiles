@@ -6,7 +6,9 @@ set -e
 
 # Usage:
 #  sudo ./bootstrap.sh install
-#  sudo ./bootstrap.sh update
+#  sudo DEBUG=1 ./bootstrap.sh update
+
+DEBUG="${DEBUG:-0}"
 
 __run() {
     if [[ ! -f "${PACKAGELIST:?}" ]]; then
@@ -14,10 +16,14 @@ __run() {
         exit 1
     fi
 
-    while read -r line; do
+    while read -r line || [[ -n "$line" ]]; do
+        # Skip empty lines
         [[ -z "$line" ]] && continue
+
+        [[ $DEBUG -eq 1 ]] && printf '> line: %s\n' "$line"
+
         declare -a arr=($line) # Split by space
-        printf '%s\n' "> ${arr[-1]}"
+        printf '> package: %s\n' "${arr[-1]}"
         "$@" "${arr[@]}"
         if [[ $? -ne 0 ]]; then
             printf '%s\n' "Command '${@::1}' returned non-zero code. Failed to install '${line}'."
