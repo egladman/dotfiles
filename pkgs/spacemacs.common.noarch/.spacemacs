@@ -36,6 +36,7 @@ This function should only modify configuration layer settings."
      html
      csv
      go
+     groovy
      nginx
      ansible
      javascript
