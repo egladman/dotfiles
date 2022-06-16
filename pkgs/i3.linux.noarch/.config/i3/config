@@ -116,7 +116,7 @@ bindsym $mod+Shift+q kill
 # I'm just lazy and manually calculating polybar's height given Fira Code's font size. List all available fonts with command: fc-list
 # https://tools.suckless.org/dmenu/patches/line-height/
 #                                                                                         dull black    white         orange        white
-bindsym $mod+a exec --no-startup-id dmenu_run -fn 'Fira Code:style=Regular:pixelsize=17' -nb '#403e41' -nf '#fcfcfa' -sb '#fc9867' -sf '#fcfcfa'
+bindsym $mod+a exec --no-startup-id dmenu_run -fn 'Fira Code:style=Regular:pixelsize=21' -nb '#403e41' -nf '#fcfcfa' -sb '#fc9867' -sf '#fcfcfa'
 
 # change focus
 bindsym $mod+$left focus left
