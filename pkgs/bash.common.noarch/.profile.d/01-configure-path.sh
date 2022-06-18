@@ -1,4 +1,4 @@
-export GOPATH="${HOME:?}/go"
+GOPATH="${HOME:?}/.go"
 
 # User specific environment
 if ! [[ "$PATH" =~ "$HOME/.local/bin:$HOME/bin:" ]]; then
@@ -9,4 +9,8 @@ if [[ -d "$GOPATH" ]]; then
     PATH="${PATH}:${GOPATH}/bin"
 fi
 
-export PATH
+if [[ -d "${HOME:?}/.cargo/bin" ]]; then
+    PATH="${PATH}:${HOME}/.cargo/bin"
+fi
+
+export PATH GOPATH
