@@ -76,6 +76,18 @@ set $mod Mod4
 # Toggle screen compositor on/off
 bindsym $mod+Shift+p exec $HOME/.config/i3-helpers/picom-toggle.sh
 
+# Take screenshot of currently focused i3 window and save to clipboard
+bindsym $mod+b exec $HOME/.config/i3-helpers/screenshot.sh --clip
+
+# Take screenshot of currently focused i3 window and save to file
+bindsym $mod+Shift+b exec $HOME/.config/i3-helpers/screenshot.sh --destdir $HOME/Pictures/Screenshots
+
+# Take screenshot of the entire desktop and save to clipboard
+bindsym $mod+g exec $HOME/.config/i3-helpers/screenshot.sh --clip --window root
+
+# Take screenshot of the entire desktop and save to file
+bindsym $mod+Shift+g exec $HOME/.config/i3-helpers/screenshot.sh --window root --destdir $HOME/Pictures/Screenshots
+
 # Use pactl to adjust volume in Phttps://unsplash.com/photos/4u2U8EO9OzYhttps://unsplash.com/photos/4u2U8EO9OzYulseAudio.
 set $refresh_i3status killall -SIGUSR1 i3status
 bindsym XF86AudioRaiseVolume exec --no-startup-id pactl set-sink-volume @DEFAULT_SINK@ +10% && $refresh_i3status
