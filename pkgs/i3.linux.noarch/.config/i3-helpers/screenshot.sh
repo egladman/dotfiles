@@ -13,7 +13,6 @@ set -e
 
 OPT_NOTIFY=1
 OPT_SAVE_TO_CLIPBOARD=0
-OPT_SELECTED_WINDOW="manual"
 OPT_SCREENSHOT_DIR="${HOME:?}/Pictures"
 
 __i3_get_focused_window() {
@@ -53,10 +52,6 @@ main() {
             ;;
         root)
             window_id="root"
-            ;;
-        *)
-            printf '%s\n' "Invalid window selection '$OPT_SELECTED_WINDOW'"
-            exit 1
             ;;
     esac
 
