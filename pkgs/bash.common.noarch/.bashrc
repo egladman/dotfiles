@@ -59,7 +59,6 @@ git-cherrypick() {
 
     declare -a argv=("$@")
     for i in "${!argv[@]}"; do
-        echo "yeet2 ${argv[$i]}"
         if [[ "${argv[$i]}" =~ ^([A-Za-z0-9]+)(\^)?\.\.([A-Za-z0-9]+)$ ]]; then
             if [[ "${BASH_REMATCH[2]}" == "^" ]]; then
                 printf "${FUNCNAME[0]}: Unexpected character ^"
