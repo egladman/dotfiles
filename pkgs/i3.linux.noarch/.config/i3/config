@@ -105,8 +105,11 @@ set $right semicolon
 # use Mouse+$mod to drag floating windows to their wanted position
 floating_modifier $mod
 
-# start a terminal
+# Open terminal
 bindsym $mod+Return exec kitty
+
+# Open terminal in last known directory
+bindsym $mod+Shift+Return exec kitty --directory $(<$HOME/.local/state/shell-session/whereami)
 
 # Launch monitor configuration gui
 bindsym $mod+p exec arandr

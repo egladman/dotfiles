@@ -24,6 +24,10 @@ cd() {
     command cd "$@"
 }
 
+dc() {
+    command cd "${OLDPWD:?}"
+}
+
 em() {
     local editor_command=(emacs)
     local socket_file="${HOME}/.emacs.socket"
