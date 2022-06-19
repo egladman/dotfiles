@@ -11,25 +11,49 @@ My personal dotfiles managed with [GNU Stow](https://www.gnu.org/software/stow/)
 
 ## Quick Start
 
-### Simplified
+### Install Dependencies
+
+1. Install system packages
+
+```
+sudo ./bootstrap.sh --system
+```
+
+2. Install user packages
+
+```
+./bootstrap.sh
+```
+
+#### Advanced
+
+Packages can be updated by passing `--update`. For example:
+
+```
+sudo ./bootstrap.sh --system --update
+```
+
+### Install Dotfiles
+
+#### Simplified
 
 **Note:** Piping curl to a shell is inherently dangerous. Only do so if you understand the risk.
 
 ```
-curl https://raw.githubusercontent.com/egladman/dotfiles/master/install.sh | sh
+curl --proto '=https' --tlsv1.2 -sSf https://raw.githubusercontent.com/egladman/dotfiles/master/install.sh | sh
 ```
 
-### Advanced
+#### Advanced
 
 ```
-git clone --recursive git@github.com:egladman/dotfiles.git ~/dotfiles; (cd ~/dotfiles; ./bin/sstow pkgs)
+git clone --recursive git@github.com:egladman/dotfiles.git ~/dotfiles; (cd ~/dotfiles; ./bin/sstow src)
 ```
 
 ## Usage
 
 ```
 Wrapper for GNU Stow to simplify cross-platform dotfile management
-Usage: sstow [option] path/to/pkgs
+Usage: sstow [option] path/to/src
 
 OPTIONS
    -h, --help                     Show this help text, and exit
@@ -53,10 +77,3 @@ Override auto-detected system facts with the following environment variables:
   - Details: Run `uname -m` if your architecture isn't listed
 - `TARGETOS`
   - Values: `linux, darwin`
-
-
-## Install os/flatpak packages system-wide
-
-```
-sudo ./bootstrap.sh install
-```

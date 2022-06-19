@@ -2,16 +2,25 @@
 
 set -e
 
-# Installs/Updates user defined packages system wide
+# Super basic semi-agnostic package install wrapper to bootstrap a system. Must
+# be ran twice to install BOTH user and system packages
 
-# Usage:
-#  sudo ./bootstrap.sh install
-#  sudo DEBUG=1 ./bootstrap.sh update
+# Usage: (install)
+#  sudo ./bootstrap.sh --system
+#  ./bootstrap.sh
+
+# Usage: (update)
+#  sudo ./bootstrap.sh --update --system
+#  ./bootstrap.sh --update
 
 DEBUG="${DEBUG:-0}"
 
+OPT_PACKAGELIST_DIR="pkgs"
+OPT_SYSTEM_PACKAGES=0
+OPT_UPDATE_PACKAGES=0
+
 __run() {
-    if [[ ! -f "${PACKAGELIST:?}" ]]; then
+    if [[ ! -f "${OPT_PACKAGELIST_DIR}/${PACKAGELIST:?}" ]]; then
         printf '%s\n' "File '${PACKAGELIST}' does not exist."
         exit 1
     fi
@@ -29,32 +38,62 @@ __run() {
             printf '%s\n' "Command '${@::1}' returned non-zero code. Failed to install '${line}'."
             exit 1
         fi
-    done < "$PACKAGELIST"
+    done < "${OPT_PACKAGELIST_DIR}/${PACKAGELIST}"
 }
 
-__install_all() {
-    PACKAGELIST=dnf-packages.list __run dnf install --assumeyes
-    PACKAGELIST=flatpak-packages.list __run flatpak install --system --assumeyes --noninteractive
+__install() {
+    case "$1" in
+        1) # Global packages
+            PACKAGELIST=dnf.packages __run dnf install --assumeyes
+            PACKAGELIST=flatpak.packages __run flatpak install --system --assumeyes --noninteractive
+            ;;
+        0) # Local packages
+            PACKAGELIST=cargo.packages __run cargo install --bins
+            PACKAGELIST=go.packages __run go install
+            ;;
+    esac
+
+    printf '%s\n' "Install successful"
 }
 
-__update_all() {
-    PACKAGELIST=dnf-packages.list __run dnf update --assumeyes
-    PACKAGELIST=flatpak-packages.list __run flatpak update --system --assumeyes --noninteractive
+__update() {
+    case "$1" in
+        1) # Global packages
+            PACKAGELIST=dnf.packages __run dnf update --assumeyes
+            PACKAGELIST=flatpak.packages __run flatpak update --system --assumeyes --noninteractive
+            ;;
+        0) # Local packages
+            PACKAGELIST=cargo.packages __run cargo install --bins
+            PACKAGELIST=go.packages __run go install
+            ;;
+    esac
+
+    printf '%s\n' "Update successful"
 }
 
 main() {
-    case "$1" in
-        ""|install)
-            __install_all
-            ;;
-        update)
-            __update_all
-            ;;
-        *)
-            printf '%s\n' "Command '$1' is not recognized."
-            exit 128
-            ;;
-    esac
+    while [ $# -gt 0 ]; do
+        case "$1" in
+            -S|--system)
+                OPT_SYSTEM_PACKAGES=1
+                ;;
+            -U|--update)
+                OPT_UPDATE_PACKAGES=1
+                ;;
+            *)
+                printf '%s\n' "Invalid option '$1'"
+                exit 128
+                ;;
+        esac
+        shift
+    done
+
+    if [[ $OPT_UPDATE_PACKAGES -eq 1 ]]; then
+        __update $OPT_SYSTEM_PACKAGES
+        return
+    fi
+
+    __install $OPT_SYSTEM_PACKAGES
 }
 
 main "$@"
