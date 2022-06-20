@@ -15,12 +15,48 @@ set -e
 
 DEBUG="${DEBUG:-0}"
 
-OPT_PACKAGELIST_DIR="pkgs"
+OPT_PACKAGELIST_BASE_DIR="pkgs"
+OPT_PACKAGELIST_SYSTEM_DIR="${OPT_PACKAGELIST_BASE_DIR}/system"
+OPT_PACKAGELIST_USER_DIR="${OPT_PACKAGELIST_BASE_DIR}/user"
+
 OPT_SYSTEM_PACKAGES=0
 OPT_UPDATE_PACKAGES=0
 
+# The variable naming convention is super important
+# PKGCMD_<action>_<packagemanager>
+
+# Golang
+PKGCMD_INSTALL_GO=(go install)
+PKGCMD_UPDATE_GO=(go install)
+
+# Rust
+PKGCMD_INSTALL_CARGO=(cargo install --bins)
+PKGCMD_UPDATE_CARGO=(cargo install --bins)
+
+# Dnf
+PKGCMD_INSTALL_DNF=(dnf install --assumeyes)
+PKGCMD_UPDATE_DNF=(dnf update --assumeyes)
+
+# Flatpak
+PKGCMD_INSTALL_FLATPAK=(flatpak install --system --assumeyes --noninteractive)
+PKGCMD_UPDATE_FLATPAK=(flatpak update --system --assumeyes --noninteractive)
+
+__lookup_basecmd() {
+    # Usage: __lookup_basecmd <install|update> <packagemanager>
+    #        __lookup_basecmd install dnf
+
+    var_name=$(printf '%s' PKGCMD_${1^^}_${2^^})
+    eval "printf '%s\n' \${$var_name[@]}"
+}
+
+__split() {
+    # Usage: split "string" "delimiter"
+    IFS=$'\n' read -d "" -ra arr <<< "${1//$2/$'\n'}"
+    printf '%s\n' "${arr[@]}"
+}
+
 __run() {
-    if [[ ! -f "${OPT_PACKAGELIST_DIR}/${PACKAGELIST:?}" ]]; then
+    if [[ ! -f "$PACKAGELIST" ]]; then
         printf '%s\n' "File '${PACKAGELIST}' does not exist."
         exit 1
     fi
@@ -38,37 +74,7 @@ __run() {
             printf '%s\n' "Command '${@::1}' returned non-zero code. Failed to install '${line}'."
             exit 1
         fi
-    done < "${OPT_PACKAGELIST_DIR}/${PACKAGELIST}"
-}
-
-__install() {
-    case "$1" in
-        1) # Global packages
-            PACKAGELIST=dnf.packages __run dnf install --assumeyes
-            PACKAGELIST=flatpak.packages __run flatpak install --system --assumeyes --noninteractive
-            ;;
-        0) # Local packages
-            PACKAGELIST=cargo.packages __run cargo install --bins
-            PACKAGELIST=go.packages __run go install
-            ;;
-    esac
-
-    printf '%s\n' "Install successful"
-}
-
-__update() {
-    case "$1" in
-        1) # Global packages
-            PACKAGELIST=dnf.packages __run dnf update --assumeyes
-            PACKAGELIST=flatpak.packages __run flatpak update --system --assumeyes --noninteractive
-            ;;
-        0) # Local packages
-            PACKAGELIST=cargo.packages __run cargo install --bins
-            PACKAGELIST=go.packages __run go install
-            ;;
-    esac
-
-    printf '%s\n' "Update successful"
+    done < "${PACKAGELIST:?}"
 }
 
 main() {
@@ -88,12 +94,27 @@ main() {
         shift
     done
 
-    if [[ $OPT_UPDATE_PACKAGES -eq 1 ]]; then
-        __update $OPT_SYSTEM_PACKAGES
-        return
-    fi
+    local pkg_action=install
+    [[ $OPT_UPDATE_PACKAGES -eq 1 ]] && pkg_action=update
 
-    __install $OPT_SYSTEM_PACKAGES
+    local pkg_type=user
+    [[ $OPT_SYSTEM_PACKAGES -eq 1 ]] && pkg_type=system
+
+    printf '> action: %s\n' "${pkg_action}"
+
+    for f in "${OPT_PACKAGELIST_BASE_DIR}/${pkg_type}"/*; do
+        declare -a arr
+        arr=($(__split "${f##*/}" "."))
+        # [-1] packages
+        # [-2] <packagemanager>
+
+        printf '> manager: %s\n' "${arr[-2]}"
+
+        cmd=($(__lookup_basecmd "$pkg_action" "${arr[-2]}"))
+        PACKAGELIST="$f" __run "${cmd[@]}"
+    done
+
+    printf '%s\n' "${pkg_action} successful"
 }
 
 main "$@"
