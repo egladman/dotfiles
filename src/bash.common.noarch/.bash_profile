@@ -4,6 +4,6 @@ if [[ -d "${HOME:?}/.profile.d" ]]; then
     done
 fi
 
-if [ -f "${HOME:?}/.bashrc" ]; then
+if [[ -f "${HOME:?}/.bashrc" ]]; then
     source "${HOME}/.bashrc"
 fi

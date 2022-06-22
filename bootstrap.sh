@@ -19,8 +19,11 @@ OPT_PACKAGELIST_BASE_DIR="pkgs"
 OPT_PACKAGELIST_SYSTEM_DIR="${OPT_PACKAGELIST_BASE_DIR}/system"
 OPT_PACKAGELIST_USER_DIR="${OPT_PACKAGELIST_BASE_DIR}/user"
 
+OPT_GUIX_URL_PREFIX="https://git.savannah.gnu.org/cgit/guix.git/plain/etc/"
+
 OPT_SYSTEM_PACKAGES=0
 OPT_UPDATE_PACKAGES=0
+OPT_INIT_GUIX=0
 
 # The variable naming convention is super important
 # PKGCMD_<action>_<packagemanager>
@@ -40,6 +43,29 @@ PKGCMD_UPDATE_DNF=(dnf update --assumeyes)
 # Flatpak
 PKGCMD_INSTALL_FLATPAK=(flatpak install --system --assumeyes --noninteractive)
 PKGCMD_UPDATE_FLATPAK=(flatpak update --system --assumeyes --noninteractive)
+
+# Guix
+PKGCMD_INSTALL_GUIX=(guix package --install)
+PKGCMD_UPDATE_GUIX=(guix package --upgrade)
+
+__install_guix() {
+    # TODO add selinux support
+    # For the time being disable SELinux. See /etc/selinux/config
+    # https://guix.gnu.org/manual/en/html_node/SELinux-Support.html
+    selinuxenabled && printf '%s\n' "SELinux is not supported." && exit 3
+
+    if [[ -d /gnu/store ]]; then
+        printf '%s\n' "Guix is already installed. Directory '/gnu/store' exists. Skipping..."
+        return
+    fi
+
+    # TODO verify gpg sig
+
+    tmp_file="$(mktemp)"
+    curl --proto '=https' --output "$tmp_file" --tlsv1.2 -sSf "${OPT_GUIX_URL_PREFIX}guix-install.sh"
+    chmod +x "$tmp_file"
+    yes | "$tmp_file"
+}
 
 __lookup_basecmd() {
     # Usage: __lookup_basecmd <install|update> <packagemanager>
@@ -86,6 +112,9 @@ main() {
             -U|--update)
                 OPT_UPDATE_PACKAGES=1
                 ;;
+            -G|--guix)
+                OPT_INIT_GUIX=1
+                ;;
             *)
                 printf '%s\n' "Invalid option '$1'"
                 exit 128
@@ -93,6 +122,12 @@ main() {
         esac
         shift
     done
+
+    # Install Guix
+    if [[ $OPT_INIT_GUIX -eq 1 ]]; then
+        __install_guix && guix pull
+        exit 0
+    fi
 
     local pkg_action=install
     [[ $OPT_UPDATE_PACKAGES -eq 1 ]] && pkg_action=update

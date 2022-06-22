@@ -19,7 +19,14 @@ My personal dotfiles managed with [GNU Stow](https://www.gnu.org/software/stow/)
 sudo ./bootstrap.sh --system
 ```
 
-2. Install user packages
+2. Install Guix
+
+```
+sudo ./bootstrap.sh --guix
+```
+
+
+3. Install user packages
 
 ```
 ./bootstrap.sh
