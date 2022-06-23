@@ -1,6 +1,9 @@
 # Extend functionality of starship
 
 BASHPROFILED_USER_SHELL_WHEREAMI_DIR="${XDG_STATE_HOME:-${HOME:?}/.local/state}/shell-session"
+if [[ ! -d "$BASHPROFILED_USER_SHELL_WHEREAMI_DIR" ]]; then
+    mkdir -p "$BASHPROFILED_USER_SHELL_WHEREAMI_DIR"
+fi
 
 # Function starship_precmd invokes starship_precmd_user_func
 __starship_precmd_user() {
