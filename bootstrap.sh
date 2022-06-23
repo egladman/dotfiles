@@ -48,6 +48,13 @@ PKGCMD_UPDATE_FLATPAK=(flatpak update --system --assumeyes --noninteractive)
 PKGCMD_INSTALL_GUIX=(guix package --install)
 PKGCMD_UPDATE_GUIX=(guix package --upgrade)
 
+__yes() {
+    # Usage: __yes
+    #        __yes foo bar
+    # Pure Bash implementation of GNU Coreutils yes in one-line
+    while :; do printf '%s\n' "${*:-y}"; done
+}
+
 __install_guix() {
     # TODO add selinux support
     # For the time being disable SELinux. See /etc/selinux/config
@@ -64,7 +71,7 @@ __install_guix() {
     tmp_file="$(mktemp)"
     curl --proto '=https' --output "$tmp_file" --tlsv1.2 -sSf "${OPT_GUIX_URL_PREFIX}guix-install.sh"
     chmod +x "$tmp_file"
-    yes | "$tmp_file"
+    __yes | "$tmp_file"
 }
 
 __lookup_basecmd() {
