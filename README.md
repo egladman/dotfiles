@@ -11,7 +11,7 @@ My personal dotfiles managed with [GNU Stow](https://www.gnu.org/software/stow/)
 
 ## Quick Start
 
-### Install Dependencies
+### Install Dependencies (Linux)
 
 1. Install system packages
 
