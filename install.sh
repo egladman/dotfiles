@@ -12,7 +12,7 @@ if [ ! -d "$DESTDIR" ]; then
     # Do not attempt to clone top-level git submodules by default
     if [ $INCLUDE_PRIVATE -eq 0 ]; then
         printf '>  %s\n' "Tidying git submodules"
-        (cd "$DESTDIR"; git rm dotfiles-*) || true
+        (cd "$DESTDIR"; git rm src/module.*) || true
     fi
 
     printf '>  %s\n' "Cloning git submodules"
