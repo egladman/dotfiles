@@ -11,7 +11,9 @@ My personal dotfiles managed with [GNU Stow](https://www.gnu.org/software/stow/)
 
 ## Quick Start
 
-### Install Dependencies (Linux)
+### Install Dependencies
+
+#### Linux
 
 1. Install system packages
 
@@ -30,6 +32,14 @@ sudo ./bootstrap.sh --guix
 
 ```
 ./bootstrap.sh
+```
+
+#### MacOS
+
+1. Install user packages
+
+```
+./bootstrap.sh --skip-guix --skip-cargo
 ```
 
 #### Advanced
