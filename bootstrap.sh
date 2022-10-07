@@ -24,6 +24,7 @@ OPT_GUIX_URL_PREFIX="https://git.savannah.gnu.org/cgit/guix.git/plain/etc/"
 OPT_SYSTEM_PACKAGES=0
 OPT_UPDATE_PACKAGES=0
 OPT_INIT_GUIX=0
+OPT_SKIP_MANAGERS=()
 
 # The variable naming convention is super important
 # PKGCMD_<action>_<packagemanager>
@@ -40,6 +41,10 @@ PKGCMD_UPDATE_CARGO=(cargo install --bins)
 PKGCMD_INSTALL_DNF=(dnf install --assumeyes)
 PKGCMD_UPDATE_DNF=(dnf update --assumeyes)
 
+# Nodejs
+PKGCMD_INSTALL_NPM=(npm install --global)
+PKGCMD_UPDATE_NPM=(npm update --global)
+
 # Flatpak
 PKGCMD_INSTALL_FLATPAK=(flatpak install --system --assumeyes --noninteractive)
 PKGCMD_UPDATE_FLATPAK=(flatpak update --system --assumeyes --noninteractive)
@@ -53,6 +58,18 @@ __yes() {
     #        __yes foo bar
     # Pure Bash implementation of GNU Coreutils yes in one-line
     while :; do printf '%s\n' "${*:-y}"; done
+}
+
+__setup_npm() {
+    local prefix="${HOME:?}"
+
+    if [[ ! -d "${prefix}/.npmpackages" ]]; then
+        mkdir --parents "${prefix}/.npmpackages"
+    fi
+
+    if [[ ! -d "${prefix}/.npmrc" ]]; then
+        printf '%s\n' "prefix = ${prefix}/.npmpackages" >> "${prefix}/.npmrc"
+    fi
 }
 
 __install_guix() {
@@ -122,6 +139,9 @@ main() {
             -G|--guix)
                 OPT_INIT_GUIX=1
                 ;;
+            --skip-*)
+                OPT_SKIP_MANAGERS+=("${1##--skip-}")
+                ;;
             *)
                 printf '%s\n' "Invalid option '$1'"
                 exit 128
@@ -135,6 +155,8 @@ main() {
         __install_guix && guix pull
         exit 0
     fi
+
+    __setup_npm
 
     local pkg_action=install
     [[ $OPT_UPDATE_PACKAGES -eq 1 ]] && pkg_action=update
@@ -151,6 +173,10 @@ main() {
         # [-2] <packagemanager>
 
         printf '> manager: %s\n' "${arr[-2]}"
+
+        if [[ " ${OPT_SKIP_MANAGERS[*]} " =~ " ${arr[-2]} " ]]; then
+            continue
+        fi
 
         cmd=($(__lookup_basecmd "$pkg_action" "${arr[-2]}"))
         PACKAGELIST="$f" __run "${cmd[@]}"
