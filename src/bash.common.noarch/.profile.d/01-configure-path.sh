@@ -20,12 +20,16 @@ if [[ -d "$GOPATH" ]]; then
     PATH="${PATH}:${GOPATH}/bin"
 fi
 
-if [[ -d "${HOME:?}/.cargo/bin" ]]; then
+if [[ -d "${HOME:?}/.cargo" ]]; then
     PATH="${PATH}:${HOME}/.cargo/bin"
 fi
 
-if [[ -d "${HOME:?}/.npmpackages/bin" ]]; then
+if [[ -d "${HOME:?}/.npmpackages" ]]; then
     PATH="${PATH}:${HOME}/.npmpackages/bin"
+fi
+
+if [[ -d "${KREW_ROOT:-$HOME/.krew}" ]]; then
+    PATH="${PATH}:${KREW_ROOT:-$HOME/.krew}/bin"
 fi
 
 export PATH GOPATH
