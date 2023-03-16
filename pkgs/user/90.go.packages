@@ -1,4 +1,5 @@
 github.com/go-delve/delve/cmd/dlv@latest
+golang.org/x/tools/gopls@latest
 github.com/golangci/golangci-lint/cmd/golangci-lint@latest
 gotest.tools/gotestsum@latest
 github.com/wagoodman/dive@latest
