@@ -267,3 +267,4 @@ nix-search() {
 flip-coin() {
     [[ $((RANDOM%2)) -eq 1 ]] && printf '%s\n' "heads" || printf '%s\n' "tails"
 }
+

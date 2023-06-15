@@ -1,4 +1,4 @@
-export EDITOR=emacs
+export EDITOR="emacs -nw"
 export VISUAL=$EDITOR
 export MARKPATH="${HOME:?}/.marks"
 export CDPATH=".:${MARKPATH}"
