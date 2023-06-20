@@ -83,9 +83,15 @@ __gather_facts() {
     esac
 }
 
+argv=()
 action_count=0
-while [[ $# -gt 1 ]]; do
+while [[ $# -ge 1 ]]; do
     case "$1" in
+	--)
+	    shift
+	    _STOWOPTS+=("$@")
+	    break
+	    ;;
 	-S|--stow)
 	    __log "Stowing..."
 	    action_count=$((action_count+1))
@@ -104,18 +110,20 @@ while [[ $# -gt 1 ]]; do
 	    __log "Performing dry run..."
 	    _STOWOPTS+=('--no')
 	    ;;
-  -h|--help)
-      printf '%s\n' "$_USAGE"
+	-h|--help)
+	    printf '%s\n' "$_USAGE"
 	    exit 0
-      ;;
-  -v|--version)
+	    ;;
+	-v|--version)
 	    printf '%s\n' "$_VERSION"
 	    exit 0
-      ;;
-	-*|--*)
+	    ;;
+	-*)
 	    __err "Unsupported option. Run: ${0##*/} help "
 	    exit 1
 	    ;;
+	*)
+	    argv+=("$1")
     esac
     shift
 done
@@ -128,12 +136,17 @@ fi
 declare -a submodules
 declare -a packages
 
-if [[ ! -d "$1" ]]; then
-    __err "Directory '$1' does not exist"
+if [[ -z "${argv[0]}" ]]; then
+    __err "Expected one argument, but got nothing."
     exit 1
 fi
 
-for path in "${1}"/*; do
+if [[ ! -d "${argv[0]}" ]]; then
+    __err "Directory '${argv[0]}' does not exist"
+    exit 1
+fi
+
+for path in "${argv[0]}"/*; do
     [[ ! -d "$path" ]] && continue
 
     # Check for git submodules
