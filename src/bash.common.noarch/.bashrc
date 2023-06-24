@@ -29,12 +29,16 @@ dc() {
 }
 
 em() {
-    local editor_command=(emacs)
-    local socket_file="${HOME}/.emacs.socket"
-    if [[ -S "$socket_file" ]]; then
-        editor_command=(emacsclient --socket-name "$socket_file" )
-    fi
-    TERM=xterm-emacs "${editor_command[@]}" -nw "$@"
+    local socket="${XDG_RUNTIME_DIR:?/tmp}/emacs/server"
+
+    # Passing an empty string  will automatically start the daemon if its not already running
+    declare -a base_argv
+    base_argv=(
+	--socket-name "$socket"
+	--alternate-editor ''
+    )
+
+    TERM=xterm-emacs emacsclient "${base_argv[@]}" "$@"
 }
 
 la() {
