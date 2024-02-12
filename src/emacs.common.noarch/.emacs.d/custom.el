@@ -4,18 +4,18 @@
 
   (setq indent-tabs-mode nil) ;; no tabs
 
-  (setq make-backup-files nil) ;; keep everything under vc 
+  (setq make-backup-files nil) ;; keep everything under vc
   (setq auto-save-default nil)
 
   ;; keep backup and save files in a dedicated directory
   (setq backup-directory-alist
-        `((".*" . ,(concat user-emacs-directory "backups")))
-        auto-save-file-name-transforms
-        `((".*" ,(concat user-emacs-directory "backups") t)))
+	`((".*" . ,(concat user-emacs-directory "backups")))
+	auto-save-file-name-transforms
+	`((".*" ,(concat user-emacs-directory "backups") t)))
 
   ;; keep undo tree cache in a dedicated directory
   (setq undo-tree-history-directory-alist
-	`((".*" . ,(concat user-emacs-directory "undo"))))
+	`((".*" . ,(concat user-emacs-directory "backups")))`((".*" . ,(concat user-emacs-directory "undo"))))
 
   ;; no need to create lockfiles
   (setq create-lockfiles nil))
@@ -54,11 +54,13 @@
 ;; Configure vertico directory extension.
 (use-package vertico-directory
   :straight nil
+  ;; https://github.com/radian-software/straight.el/issues/819
+  :load-path "straight/build/vertico/extensions"
   ;; More convenient directory navigation commands
   :bind (:map vertico-map
-              ("RET" . vertico-directory-enter)
-              ("DEL" . vertico-directory-delete-char)
-              ("M-DEL" . vertico-directory-delete-word))
+	      ("RET" . vertico-directory-enter)
+	      ("DEL" . vertico-directory-delete-char)
+	      ("M-DEL" . vertico-directory-delete-word))
   ;; Tidy shadowed file names
   :hook (rfn-eshadow-update-overlay . vertico-directory-tidy))
 
@@ -133,13 +135,13 @@
 
   ;; Optionally use TAB for cycling, default is `corfu-complete'.
   :bind (:map corfu-map
-              ("M-SPC"      . corfu-insert-separator)
-              ;;("TAB"        . corfu-next)
-              ;;([tab]        . corfu-next)
-              ;;("S-TAB"      . corfu-previous)
-              ;;([backtab]    . corfu-previous)
-              ("S-<return>" . corfu-insert)
-              ("RET"        . nil))
+	      ("M-SPC"      . corfu-insert-separator)
+	      ;;("TAB"        . corfu-next)
+	      ;;([tab]        . corfu-next)
+	      ;;("S-TAB"      . corfu-previous)
+	      ;;([backtab]    . corfu-previous)
+	      ("S-<return>" . corfu-insert)
+	      ("RET"        . nil))
   ;; Enable Corfu only for certain modes.
   ;; :hook ((prog-mode . corfu-mode)
   ;;        (shell-mode . corfu-mode)
@@ -155,10 +157,10 @@
 
   :config
   (add-hook 'eshell-mode-hook
-            (lambda () (setq-local corfu-quit-at-boundary t
-                              corfu-quit-no-match t
-                              corfu-auto nil)
-              (corfu-mode))))
+	    (lambda () (setq-local corfu-quit-at-boundary t
+				   corfu-quit-no-match t
+				   corfu-auto nil)
+	      (corfu-mode))))
 
 (use-package emacs
   :init
@@ -183,8 +185,8 @@
   ;; Tune the global completion style settings to your liking!
   ;; This affects the minibuffer and non-lsp completion at point.
   (setq completion-styles '(orderless partial-completion basic)
-        completion-category-defaults nil
-        completion-category-overrides nil))
+	completion-category-defaults nil
+	completion-category-overrides nil))
 
 (use-package lsp-mode
   :straight t
@@ -193,7 +195,7 @@
   :init
   (defun my/lsp-mode-setup-completion ()
     (setf (alist-get 'styles (alist-get 'lsp-capf completion-category-defaults))
-          '(flex))) ;; Configure flex
+	  '(flex))) ;; Configure flex
   :hook
   (lsp-completion-mode . my/lsp-mode-setup-completion))
 
@@ -306,57 +308,57 @@
   :config
   (progn
     (setq treemacs-collapse-dirs                   (if treemacs-python-executable 3 0)
-          treemacs-deferred-git-apply-delay        0.5
-          treemacs-directory-name-transformer      #'identity
-          treemacs-display-in-side-window          t
-          treemacs-eldoc-display                   'simple
-          treemacs-file-event-delay                2000
-          treemacs-file-extension-regex            treemacs-last-period-regex-value
-          treemacs-file-follow-delay               0.2
-          treemacs-file-name-transformer           #'identity
-          treemacs-follow-after-init               t
-          treemacs-expand-after-init               t
-          treemacs-find-workspace-method           'find-for-file-or-pick-first
-          treemacs-git-command-pipe                ""
-          treemacs-goto-tag-strategy               'refetch-index
-          treemacs-header-scroll-indicators        '(nil . "^^^^^^")
-          treemacs-hide-dot-git-directory          t
-          treemacs-indentation                     2
-          treemacs-indentation-string              " "
-          treemacs-is-never-other-window           nil
-          treemacs-max-git-entries                 5000
-          treemacs-missing-project-action          'ask
-          treemacs-move-forward-on-expand          nil
-          treemacs-no-png-images                   nil
-          treemacs-no-delete-other-windows         t
-          treemacs-project-follow-cleanup          nil
-          treemacs-persist-file                    (expand-file-name ".cache/treemacs-persist" user-emacs-directory)
-          treemacs-position                        'left
-          treemacs-read-string-input               'from-child-frame
-          treemacs-recenter-distance               0.1
-          treemacs-recenter-after-file-follow      nil
-          treemacs-recenter-after-tag-follow       nil
-          treemacs-recenter-after-project-jump     'always
-          treemacs-recenter-after-project-expand   'on-distance
-          treemacs-litter-directories              '("/node_modules" "/.venv" "/.cask")
-          treemacs-project-follow-into-home        nil
-          treemacs-show-cursor                     nil
-          treemacs-show-hidden-files               t
-          treemacs-silent-filewatch                nil
-          treemacs-silent-refresh                  nil
-          treemacs-sorting                         'alphabetic-asc
-          treemacs-select-when-already-in-treemacs 'move-back
-          treemacs-space-between-root-nodes        t
-          treemacs-tag-follow-cleanup              t
-          treemacs-tag-follow-delay                1.5
-          treemacs-text-scale                      nil
-          treemacs-user-mode-line-format           nil
-          treemacs-user-header-line-format         nil
-          treemacs-wide-toggle-width               70
-          treemacs-width                           35
-          treemacs-width-increment                 1
-          treemacs-width-is-initially-locked       t
-          treemacs-workspace-switch-cleanup        nil)
+	  treemacs-deferred-git-apply-delay        0.5
+	  treemacs-directory-name-transformer      #'identity
+	  treemacs-display-in-side-window          t
+	  treemacs-eldoc-display                   'simple
+	  treemacs-file-event-delay                2000
+	  treemacs-file-extension-regex            treemacs-last-period-regex-value
+	  treemacs-file-follow-delay               0.2
+	  treemacs-file-name-transformer           #'identity
+	  treemacs-follow-after-init               t
+	  treemacs-expand-after-init               t
+	  treemacs-find-workspace-method           'find-for-file-or-pick-first
+	  treemacs-git-command-pipe                ""
+	  treemacs-goto-tag-strategy               'refetch-index
+	  treemacs-header-scroll-indicators        '(nil . "^^^^^^")
+	  treemacs-hide-dot-git-directory          t
+	  treemacs-indentation                     2
+	  treemacs-indentation-string              " "
+	  treemacs-is-never-other-window           nil
+	  treemacs-max-git-entries                 5000
+	  treemacs-missing-project-action          'ask
+	  treemacs-move-forward-on-expand          nil
+	  treemacs-no-png-images                   nil
+	  treemacs-no-delete-other-windows         t
+	  treemacs-project-follow-cleanup          nil
+	  treemacs-persist-file                    (expand-file-name ".cache/treemacs-persist" user-emacs-directory)
+	  treemacs-position                        'left
+	  treemacs-read-string-input               'from-child-frame
+	  treemacs-recenter-distance               0.1
+	  treemacs-recenter-after-file-follow      nil
+	  treemacs-recenter-after-tag-follow       nil
+	  treemacs-recenter-after-project-jump     'always
+	  treemacs-recenter-after-project-expand   'on-distance
+	  treemacs-litter-directories              '("/node_modules" "/.venv" "/.cask")
+	  treemacs-project-follow-into-home        nil
+	  treemacs-show-cursor                     nil
+	  treemacs-show-hidden-files               t
+	  treemacs-silent-filewatch                nil
+	  treemacs-silent-refresh                  nil
+	  treemacs-sorting                         'alphabetic-asc
+	  treemacs-select-when-already-in-treemacs 'move-back
+	  treemacs-space-between-root-nodes        t
+	  treemacs-tag-follow-cleanup              t
+	  treemacs-tag-follow-delay                1.5
+	  treemacs-text-scale                      nil
+	  treemacs-user-mode-line-format           nil
+	  treemacs-user-header-line-format         nil
+	  treemacs-wide-toggle-width               70
+	  treemacs-width                           35
+	  treemacs-width-increment                 1
+	  treemacs-width-is-initially-locked       t
+	  treemacs-workspace-switch-cleanup        nil)
 
     ;; The default width and height of the icons is 22 pixels. If you are
     ;; using a Hi-DPI display, uncomment this to double the icon size.
@@ -369,7 +371,7 @@
       (treemacs-git-commit-diff-mode t))
 
     (pcase (cons (not (null (executable-find "git")))
-                 (not (null treemacs-python-executable)))
+		 (not (null treemacs-python-executable)))
       (`(t . t)
        (treemacs-git-mode 'deferred))
       (`(t . _)
@@ -378,17 +380,15 @@
     (treemacs-hide-gitignored-files-mode nil))
   :bind
   (:map global-map
-        ("M-0"       . treemacs-select-window)
-        ("C-x t 1"   . treemacs-delete-other-windows)
-        ("C-x t t"   . treemacs)
-        ("C-x t d"   . treemacs-select-directory)
-        ("C-x t B"   . treemacs-bookmark)
-        ("C-x t C-t" . treemacs-find-file)
-        ("C-x t M-t" . treemacs-find-tag)))
+	("M-0"       . treemacs-select-window)
+	("C-x t 1"   . treemacs-delete-other-windows)
+	("C-x t t"   . treemacs)
+	("C-x t d"   . treemacs-select-directory)
+	("C-x t B"   . treemacs-bookmark)
+	("C-x t C-t" . treemacs-find-file)
+	("C-x t M-t" . treemacs-find-tag)))
 
 (use-package treemacs-magit
   :straight t
   :after (treemacs magit)
   :ensure t)
-
-

@@ -18,28 +18,13 @@ My personal dotfiles managed with [GNU Stow](https://www.gnu.org/software/stow/)
 1. Install system packages
 
 ```
-sudo ./bootstrap.sh --system
+sudo ./setup.sh --system
 ```
-
-2. Install Guix
-
-```
-sudo ./bootstrap.sh --guix
-```
-
 
 3. Install user packages
 
 ```
-./bootstrap.sh
-```
-
-#### MacOS
-
-1. Install user packages
-
-```
-./bootstrap.sh --skip-guix --skip-cargo
+./setup.sh
 ```
 
 #### Advanced
@@ -47,7 +32,7 @@ sudo ./bootstrap.sh --guix
 Packages can be updated by passing `--update`. For example:
 
 ```
-sudo ./bootstrap.sh --system --update
+sudo ./setup.sh --system --update
 ```
 
 ### Install Dotfiles
